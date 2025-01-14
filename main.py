@@ -257,6 +257,14 @@ def edit_post():
 def delete_post():
     post_id = request.args.get("post_id")
     post_to_delete = db.get_or_404(BlogPost, post_id)
+
+    comments_to_delete = db.session.execute(
+        db.select(Comment).where(Comment.post_id == post_id)
+    ).scalars().all()
+
+    for comment in comments_to_delete:
+        db.session.delete(comment)
+
     db.session.delete(post_to_delete)
     db.session.commit()
     return redirect(url_for('get_all_posts'))
