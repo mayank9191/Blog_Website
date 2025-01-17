@@ -207,7 +207,7 @@ def show_post():
     requested_post = db.get_or_404(BlogPost, post_id)
     requested_comment = db.session.execute(
         db.select(Comment).where(Comment.post_id == post_id)).scalars()
-    return render_template("post.html", post=requested_post, logged_in=current_user, form=commentform, comments=requested_comment, admin=current_user)
+    return render_template("post.html", post=requested_post, logged_in=current_user.is_authenticated, form=commentform, comments=requested_comment, admin=current_user)
 
 
 @app.route("/new-post", methods=["GET", "POST"])
